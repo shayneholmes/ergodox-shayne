@@ -130,9 +130,6 @@ dvorak: all
 colemak: OPT_DEFS += -DKEYMAP_COLEMAK
 colemak: all
 
-workman: OPT_DEFS += -DKEYMAP_WORKMAN
-workman: all
-
 cub: OPT_DEFS += -DKEYMAP_CUB
 cub: all
 
