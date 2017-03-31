@@ -430,19 +430,23 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
     // print("id  = "); phex(id); print("\n");
     // print("opt = "); phex(opt); print("\n");
     if (id == PLOVER_SWITCH) {
-        action_t action = ACTION_KEY((layer_state & 1<<LAYER_PLOVER) ? KC_F23 : KC_F24);
         if (!event.pressed) {
             uint8_t savedmods = get_mods();
             uint8_t shiftpressed = (savedmods & (MOD_LSFT | MOD_RSFT));
             if (shiftpressed) {
                 layer_off(LAYER_PLOVER); // shift+plover is a signal to AHK to restart Plover, so don't toggle the plover layer
             } else {
+                bool turning_on = !(layer_state & 1<<LAYER_PLOVER);
                 layer_invert(LAYER_PLOVER);
+                if (turning_on) {
+                    // PHROPB
+                    action_macro_play(MACRO(D(E), D(R), D(F), D(V), D(I), D(K), U(E), U(R), U(F), U(V), U(I), U(K), END));
+                } else {
+                    // PHRO*F
+                    action_macro_play(MACRO(D(E), D(R), D(F), D(V), D(Y), D(U), U(E), U(R), U(F), U(V), U(Y), U(U), END));
+                }
             }
             //clear_mods();
-        }
-        if (action.code != (action_t)ACTION_NO.code) {
-            simon_hotkey(record, action);
         }
     }
     else if (id == ANY_KEY) {
