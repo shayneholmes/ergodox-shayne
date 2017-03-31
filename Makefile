@@ -127,17 +127,17 @@ include $(TOP_DIR)/rules.mk
 dvorak: OPT_DEFS += -DKEYMAP_DVORAK
 dvorak: all
 
-colemak: OPT_DEFS += -DKEYMAP_COLEMAK
-colemak: all
-
 cub: OPT_DEFS += -DKEYMAP_CUB
 cub: all
 
-simon: OPT_DEFS += -DKEYMAP_SIMON
-simon: all
+shayne: OPT_DEFS += -DKEYMAP_SHAYNE
+shayne: all
+
+shayne_osx: OPT_DEFS += -DKEYMAP_SHAYNE_OSX
+shayne_osx: all
 
 plover: OPT_DEFS += -DKEYMAP_PLOVER
 plover: all
 
-.DEFAULT_GOAL := simon
+.DEFAULT_GOAL := shayne_osx
 

@@ -29,7 +29,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "host.h"
 #include "print.h"
 #include "debug.h"
-#include "keymap.h"
 #include "ergodox.h"
 
 
@@ -77,18 +76,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #if defined(KEYMAP_DVORAK)
 #include "keymap_dvorak.h"
-#elif defined(KEYMAP_COLEMAK)
-#include "keymap_colemak.h"
-#elif defined(KEYMAP_WORKMAN)
-#include "keymap_workman.h"
 #elif defined(KEYMAP_MICRO)
 #include "keymap_micro.h"
 #elif defined(KEYMAP_CUB)
 #include "keymap_cub.h"
 #elif defined(KEYMAP_PLOVER)
 #include "keymap_plover.h"
-#elif defined(KEYMAP_SIMON)
-#include "keymap_simon.h"
+#elif defined(KEYMAP_SHAYNE)
+#include "keymap_shayne.h"
+#elif defined(KEYMAP_SHAYNE_OSX)
+#include "keymap_shayne_osx.h"
 #else
 
 static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {

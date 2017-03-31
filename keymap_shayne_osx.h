@@ -365,9 +365,9 @@ enum function_id {
 };
 
 enum macro_id {
-    MACRO_PASSWORD1,
-    MACRO_PASSWORD2,
-    MACRO_PASSWORD3,
+    PASSWORD1,
+    PASSWORD2,
+    PASSWORD3,
 };
 
 /*
@@ -384,8 +384,8 @@ static const action_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(UNUSED),                        // ** FN7 - unused
     ACTION_FUNCTION(ANY_KEY),                       // FN8 - AnyKey functional layer
     ACTION_FUNCTION(UNUSED),                        // ** FN9 - unused
-    ACTION_MACRO(MACRO_PASSWORD1),                  // FN10 - password1
-    ACTION_MACRO(MACRO_PASSWORD2),                  // FN11 - password2
+    ACTION_MACRO(PASSWORD1),                        // FN10 - password1
+    ACTION_MACRO(PASSWORD2),                        // FN11 - password2
     ACTION_FUNCTION(SHIFT_SWITCH),                  // FN12 - symbolized number row
     ACTION_FUNCTION(FKEY_SWITCH),                   // FN13 - Two-button Fkey layer requires special logic to get rid of it appropriately
 };
@@ -574,13 +574,17 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 /*
  * Macro definition
  */
+#include "keymap_passwords.h"
+
 const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
     keyevent_t event = record->event;
 
     if (event.pressed) {
         switch (id) {
-#include "keymap_simon_passwords.h"
+		case PASSWORD1: return MACRO_PASSWORD1;
+		case PASSWORD2: return MACRO_PASSWORD2;
+		case PASSWORD3: return MACRO_PASSWORD3;
         }
     }
     return MACRO_NONE;

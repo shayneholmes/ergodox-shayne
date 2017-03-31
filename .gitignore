@@ -1,6 +1,4 @@
 keymap_passwords.h
-keymap_passwords_cub.h
-keymap_simon_passwords.h
 .dep
 *.o
 *.eep
