@@ -456,7 +456,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
         action_t action = ACTION_NO;
 
         if (col == 3 && row == 1) { // :
-            action = (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_SCLN);
+            action = (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);
         }
         else if (col == 3 && row == 2) { // Q
             action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
