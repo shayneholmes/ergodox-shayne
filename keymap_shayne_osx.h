@@ -404,15 +404,15 @@ void simon_hotkey(keyrecord_t *record, action_t action)
                 if (event.pressed) {
                     if (mods) {
                         add_weak_mods(mods);
-                        send_keyboard_report();
                     }
+                    send_keyboard_report();
                     register_code(action.key.code);
                 } else {
                     unregister_code(action.key.code);
                     if (mods) {
                         del_weak_mods(mods);
-                        send_keyboard_report();
                     }
+                    send_keyboard_report();
                 }
             }
             break;
