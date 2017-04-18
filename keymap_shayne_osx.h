@@ -582,9 +582,9 @@ const macro_t *action_get_macro(keyrecord_t *record, uint8_t id, uint8_t opt)
 
     if (event.pressed) {
         switch (id) {
-		case PASSWORD1: return MACRO_PASSWORD1;
-		case PASSWORD2: return MACRO_PASSWORD2;
-		case PASSWORD3: return MACRO_PASSWORD3;
+            case PASSWORD1: return MACRO_PASSWORD1;
+            case PASSWORD2: return MACRO_PASSWORD2;
+            case PASSWORD3: return MACRO_PASSWORD3;
         }
     }
     return MACRO_NONE;
