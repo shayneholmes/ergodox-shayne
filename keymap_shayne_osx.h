@@ -384,28 +384,16 @@ uint8_t get_shiftswitch_key(keyevent_t event) {
 }
 
 void action_shiftswitch(keyevent_t event) {
-    action_t action = ACTION_NO;
     uint8_t keycode = get_shiftswitch_key(event);
-    if (keycode != KC_NO) {
-        action = (action_t)ACTION_MODS_KEY(MOD_LSFT, keycode);
-    }
-    if (action.code != (action_t)ACTION_NO.code) {
-        uint8_t savedmods = get_mods();
-        uint8_t shiftpressed = (savedmods & (MOD_LSFT | MOD_RSFT));
-        uint8_t othermodspressed = (savedmods & (MOD_LGUI | MOD_RGUI | MOD_LCTL | MOD_RCTL | MOD_LALT | MOD_RALT ));
+    if (keycode == KC_NO) return;
 
-        if (othermodspressed) {
-            action.key.mods = 0;
-        }
-        else if (shiftpressed) {
-            action.key.mods = 0;
-            del_mods(MOD_LSFT | MOD_RSFT);
-        }
-        simon_hotkey(event, action);
-        if (shiftpressed) {
-            set_mods(savedmods);
-        }
-    }
+    uint8_t savedmods = get_mods();
+
+    action_t action = (action_t)ACTION_MODS_KEY(savedmods ? 0 : MOD_LSFT, keycode);
+
+    del_mods(MOD_LSFT | MOD_RSFT);
+    simon_hotkey(event, action);
+    set_mods(savedmods);
 }
 
 bool is_out_of_order_fkey_release(keyevent_t event, uint32_t layer_state) {
