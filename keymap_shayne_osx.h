@@ -312,44 +312,46 @@ void action_plover_key(keyevent_t event) {
     }
 }
 
-void action_any_key(keyevent_t event) {
+action_t get_any_key_action(keyevent_t event) {
     uint8_t col = event.key.col;
     uint8_t row = event.key.row;
-
-    action_t action = ACTION_NO;
 
     uint8_t active_layer = biton32(layer_state);
 
     switch (active_layer) {
         case LAYER_BLUESHIFT:
-            if (col == 1 && row == 9) { // Home
-                action = (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_LEFT);
-            }
-            else if (col == 1 && row == 11) { // End
-                action = (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_RGHT);
+            if (col == 1) {
+                switch (row) {
+                    case 9:  return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_LEFT); // Home
+                    case 11: return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_RGHT); // End
+                }
             }
             break;
         default:
-            if (col == 3 && row == 1) { // :
-                action = (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);
-            }
-            else if (col == 3 && row == 2) { // Q
-                action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
-            }
-            else if (col == 3 && row == 10) { // W
-                action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
+            if (col == 3) {
+                switch (row) {
+                    case 1:  return (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);  // :
+                    case 2:  return (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4); // Q
+                    case 10: return (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4); // W
+                }
             }
             else if (col == 4 && row == 12) { // Alt+tab
-                action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_TAB);
+                return (action_t)ACTION_MODS_KEY(MOD_LALT, KC_TAB);
             }
             break;
     }
-    if (action.code != (action_t)ACTION_NO.code) {
-        simon_hotkey(event, action);
-    }
-    else if (!event.pressed) {
+    if (!event.pressed) {
+        print("Unknown anykey press:\n");
         print("col = "); pdec(col); print("\n");
         print("row = "); pdec(row); print("\n");
+    }
+    return (action_t)ACTION_NO;
+}
+
+void action_any_key(keyevent_t event) {
+    action_t action = get_any_key_action(event);
+    if (action.code != (action_t)ACTION_NO.code) {
+        simon_hotkey(event, action);
     }
 }
 
