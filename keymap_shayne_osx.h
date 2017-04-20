@@ -561,20 +561,20 @@ void action_shiftswitch(keyevent_t event) {
     }
 }
 
-void action_fkey(keyevent_t event) {
+bool is_out_of_order_fkey_release(keyevent_t event, uint32_t layer_state) {
+    if (!event.pressed) return false;
+
     uint8_t row = event.key.row;
-    if (event.pressed) {
-        layer_on(LAYER_FKEYS);
-    }
-    else {
-        if (
-                ((row == 0) && (layer_state & 1<<LAYER_NUMPAD)) // left button and from numpad; out-of-order release
-                || ((row == 1) && (layer_state & 1<<LAYER_BLUESHIFT)) // right button and from BlueShift; out-of-order release
-           ) { 
-            layer_invert(LAYER_NUMPAD);
-            layer_invert(LAYER_BLUESHIFT);
-        }
-        layer_off(LAYER_FKEYS);
+    return
+        ((row == 0) && (layer_state & 1<<LAYER_NUMPAD)) ||
+        ((row == 1) && (layer_state & 1<<LAYER_BLUESHIFT));
+}
+
+void action_fkey(keyevent_t event) {
+    layer_invert(LAYER_FKEYS);
+    if (is_out_of_order_fkey_release(event, layer_state)) { 
+        layer_invert(LAYER_NUMPAD);
+        layer_invert(LAYER_BLUESHIFT);
     }
 }
 
