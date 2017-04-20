@@ -442,17 +442,13 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 
     switch (id) {
         case PLOVER_SWITCH:
-            action_plover_key(event);
-            break;
+            return action_plover_key(event);
         case ANY_KEY:
-            action_any_key(event);
-            break;
+            return action_any_key(event);
         case SHIFT_SWITCH:
-            action_shiftswitch(event);
-            break;
+            return action_shiftswitch(event);
         case FKEY_SWITCH:
-            action_fkey(event);
-            break;
+            return action_fkey(event);
         default:
             print("Unknown action_function called\n");
             print("id  = "); phex(id); print("\n");
