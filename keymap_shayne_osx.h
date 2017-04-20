@@ -353,15 +353,11 @@ void action_any_key(keyevent_t event) {
     }
 }
 
-void action_shiftswitch(keyevent_t event) {
+uint8_t get_shiftswitch_key(keyevent_t event) {
+    uint8_t keycode = KC_NO;
+
     uint8_t col = event.key.col;
     uint8_t row = event.key.row;
-    uint8_t savedmods = get_mods();
-    uint8_t shiftpressed = (savedmods & (MOD_LSFT | MOD_RSFT));
-    uint8_t othermodspressed = (savedmods & (MOD_LGUI | MOD_RGUI | MOD_LCTL | MOD_RCTL | MOD_LALT | MOD_RALT ));
-
-    action_t action = ACTION_NO;
-    uint8_t keycode = KC_NO;
 
     if (col == 0) { // Number row
         switch (row) {
@@ -414,10 +410,20 @@ void action_shiftswitch(keyevent_t event) {
                 break;
         }
     }
+    return keycode;
+}
+
+void action_shiftswitch(keyevent_t event) {
+    action_t action = ACTION_NO;
+    uint8_t keycode = get_shiftswitch_key(event);
     if (keycode != KC_NO) {
         action = (action_t)ACTION_MODS_KEY(MOD_LSFT, keycode);
     }
     if (action.code != (action_t)ACTION_NO.code) {
+        uint8_t savedmods = get_mods();
+        uint8_t shiftpressed = (savedmods & (MOD_LSFT | MOD_RSFT));
+        uint8_t othermodspressed = (savedmods & (MOD_LGUI | MOD_RGUI | MOD_LCTL | MOD_RCTL | MOD_LALT | MOD_RALT ));
+
         if (othermodspressed) {
             action.key.mods = 0;
         }
