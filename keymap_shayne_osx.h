@@ -421,23 +421,23 @@ void simon_hotkey(keyevent_t event, action_t action)
 }
 
 void action_plover_key(keyevent_t event) {
-    if (!event.pressed) {
-        uint8_t savedmods = get_mods();
-        uint8_t shiftpressed = (savedmods & (MOD_LSFT | MOD_RSFT));
-        if (shiftpressed) {
-            layer_off(LAYER_PLOVER); // shift+plover is a signal to AHK to restart Plover, so don't toggle the plover layer
-        } else {
-            bool turning_on = !(layer_state & 1<<LAYER_PLOVER);
-            layer_invert(LAYER_PLOVER);
-            if (turning_on) {
-                // PHROPB
-                action_macro_play(MACRO(D(E), D(R), D(F), D(V), D(I), D(K), U(E), U(R), U(F), U(V), U(I), U(K), END));
-            } else {
-                // PHRO*F
-                action_macro_play(MACRO(D(E), D(R), D(F), D(V), D(Y), D(U), U(E), U(R), U(F), U(V), U(Y), U(U), END));
-            }
-        }
-        //clear_mods();
+    if (event.pressed) return;
+
+    uint8_t savedmods = get_mods();
+    uint8_t shift_pressed = (savedmods & (MOD_LSFT | MOD_RSFT));
+    if (shift_pressed) {
+        layer_off(LAYER_PLOVER); // shift+plover is a signal to AHK to restart Plover, so don't toggle the plover layer
+        return;
+    }
+
+    bool turning_on = !(layer_state & 1<<LAYER_PLOVER);
+    layer_invert(LAYER_PLOVER);
+    if (turning_on) {
+        // PHROPB
+        action_macro_play(MACRO(D(E), D(R), D(F), D(V), D(I), D(K), U(E), U(R), U(F), U(V), U(I), U(K), END));
+    } else {
+        // PHRO*F
+        action_macro_play(MACRO(D(E), D(R), D(F), D(V), D(Y), D(U), U(E), U(R), U(F), U(V), U(Y), U(U), END));
     }
 }
 
