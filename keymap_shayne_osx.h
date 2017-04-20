@@ -359,36 +359,23 @@ uint8_t get_shiftswitch_key(keyevent_t event) {
 
     if (col == 0) { // Number row
         switch (row) {
-            case 1:
-                return KC_1;
-            case 2:
-                return KC_2;
-            case 3:
-                return KC_3;
-            case 4:
-                return KC_4;
-            case 5:
-                return KC_5;
-            case 8:
-                return KC_6;
-            case 9:
-                return KC_7;
-            case 10:
-                return KC_8;
-            case 11:
-                return KC_9;
-            case 12:
-                return KC_0;
+            case 1:  return KC_1;
+            case 2:  return KC_2;
+            case 3:  return KC_3;
+            case 4:  return KC_4;
+            case 5:  return KC_5;
+            case 8:  return KC_6;
+            case 9:  return KC_7;
+            case 10: return KC_8;
+            case 11: return KC_9;
+            case 12: return KC_0;
         }
     }
     else if (col == 1) { // next row
         switch (row) {
-            case 1:
-                return KC_GRV;
-            case 2:
-                return KC_MINS; // Left brace in Dvorak
-            case 3:
-                return KC_EQL; // Right brace in Dvorak
+            case 1: return KC_GRV;
+            case 2: return KC_MINS; // Left brace in Dvorak
+            case 3: return KC_EQL; // Right brace in Dvorak
         }
     }
     return KC_NO;
