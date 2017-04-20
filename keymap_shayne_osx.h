@@ -390,10 +390,8 @@ static const action_t PROGMEM fn_actions[] = {
     ACTION_FUNCTION(FKEY_SWITCH),                   // FN13 - Two-button Fkey layer requires special logic to get rid of it appropriately
 };
 
-void simon_hotkey(keyrecord_t *record, action_t action)
+void simon_hotkey(keyevent_t event, action_t action)
 {
-    keyevent_t event = record->event;
-
     switch (action.kind.id) {
         /* Key and Mods */
         case ACT_LMODS:
@@ -443,6 +441,143 @@ void action_plover_key(keyevent_t event) {
     }
 }
 
+void action_any_key(keyevent_t event) {
+    uint8_t col = event.key.col;
+    uint8_t row = event.key.row;
+
+    action_t action = ACTION_NO;
+
+    uint8_t active_layer = biton32(layer_state);
+
+    switch (active_layer) {
+        case LAYER_BLUESHIFT:
+            if (col == 1 && row == 9) { // Home
+                action = (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_LEFT);
+            }
+            else if (col == 1 && row == 11) { // End
+                action = (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_RGHT);
+            }
+            break;
+        default:
+            if (col == 3 && row == 1) { // :
+                action = (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);
+            }
+            else if (col == 3 && row == 2) { // Q
+                action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
+            }
+            else if (col == 3 && row == 10) { // W
+                action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
+            }
+            else if (col == 4 && row == 12) { // Alt+tab
+                action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_TAB);
+            }
+            break;
+    }
+    if (action.code != (action_t)ACTION_NO.code) {
+        simon_hotkey(event, action);
+    }
+    else if (!event.pressed) {
+        print("col = "); pdec(col); print("\n");
+        print("row = "); pdec(row); print("\n");
+    }
+}
+
+void action_shiftswitch(keyevent_t event) {
+    uint8_t col = event.key.col;
+    uint8_t row = event.key.row;
+    uint8_t savedmods = get_mods();
+    uint8_t shiftpressed = (savedmods & (MOD_LSFT | MOD_RSFT));
+    uint8_t othermodspressed = (savedmods & (MOD_LGUI | MOD_RGUI | MOD_LCTL | MOD_RCTL | MOD_LALT | MOD_RALT ));
+
+    action_t action = ACTION_NO;
+    uint8_t keycode = KC_NO;
+
+    if (col == 0) { // Number row
+        switch (row) {
+            case 1:
+                keycode = KC_1;
+                break;
+            case 2:
+                keycode = KC_2;
+                break;
+            case 3:
+                keycode = KC_3;
+                break;
+            case 4:
+                keycode = KC_4;
+                break;
+            case 5:
+                keycode = KC_5;
+                break;
+            case 8:
+                keycode = KC_6;
+                break;
+            case 9:
+                keycode = KC_7;
+                break;
+            case 10:
+                keycode = KC_8;
+                break;
+            case 11:
+                keycode = KC_9;
+                break;
+            case 12:
+                keycode = KC_0;
+                break;
+            default:
+                break;
+        }
+    }
+    if (col == 1) { // next row
+        switch (row) {
+            case 1:
+                keycode = KC_GRV;
+                break;
+            case 2:
+                keycode = KC_MINS; // Left brace in Dvorak
+                break;
+            case 3:
+                keycode = KC_EQL; // Right brace in Dvorak
+                break;
+            default:
+                break;
+        }
+    }
+    if (keycode != KC_NO) {
+        action = (action_t)ACTION_MODS_KEY(MOD_LSFT, keycode);
+    }
+    if (action.code != (action_t)ACTION_NO.code) {
+        if (othermodspressed) {
+            action.key.mods = 0;
+        }
+        else if (shiftpressed) {
+            action.key.mods = 0;
+            del_mods(MOD_LSFT | MOD_RSFT);
+        }
+        simon_hotkey(event, action);
+        if (shiftpressed) {
+            set_mods(savedmods);
+        }
+    }
+}
+
+void action_fkey(keyevent_t event) {
+    uint8_t row = event.key.row;
+    if (event.pressed) {
+        layer_on(LAYER_FKEYS);
+    }
+    else {
+        if (
+                ((row == 0) && (layer_state & 1<<LAYER_NUMPAD)) // left button and from numpad; out-of-order release
+                || ((row == 1) && (layer_state & 1<<LAYER_BLUESHIFT)) // right button and from BlueShift; out-of-order release
+           ) { 
+            layer_invert(LAYER_NUMPAD);
+            layer_invert(LAYER_BLUESHIFT);
+        }
+        layer_off(LAYER_FKEYS);
+    }
+}
+
 void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
     keyevent_t event = record->event;
@@ -454,138 +589,13 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
         action_plover_key(event);
     }
     else if (id == ANY_KEY) {
-        uint8_t col = event.key.col;
-        uint8_t row = event.key.row;
-
-        action_t action = ACTION_NO;
-
-        uint8_t active_layer = biton32(layer_state);
-
-        switch (active_layer) {
-            case LAYER_BLUESHIFT:
-                if (col == 1 && row == 9) { // Home
-                    action = (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_LEFT);
-                }
-                else if (col == 1 && row == 11) { // End
-                    action = (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_RGHT);
-                }
-                break;
-            default:
-                if (col == 3 && row == 1) { // :
-                    action = (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);
-                }
-                else if (col == 3 && row == 2) { // Q
-                    action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
-                }
-                else if (col == 3 && row == 10) { // W
-                    action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
-                }
-                else if (col == 4 && row == 12) { // Alt+tab
-                    action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_TAB);
-                }
-                break;
-        }
-        if (action.code != (action_t)ACTION_NO.code) {
-            simon_hotkey(record, action);
-        }
-        else if (!event.pressed) {
-            print("col = "); pdec(col); print("\n");
-            print("row = "); pdec(row); print("\n");
-        }
+        action_any_key(event);
     }
     else if (id == SHIFT_SWITCH) {
-        uint8_t col = event.key.col;
-        uint8_t row = event.key.row;
-        uint8_t savedmods = get_mods();
-        uint8_t shiftpressed = (savedmods & (MOD_LSFT | MOD_RSFT));
-        uint8_t othermodspressed = (savedmods & (MOD_LGUI | MOD_RGUI | MOD_LCTL | MOD_RCTL | MOD_LALT | MOD_RALT ));
-
-        action_t action = ACTION_NO;
-        uint8_t keycode = KC_NO;
-
-        if (col == 0) { // Number row
-            switch (row) {
-                case 1:
-                    keycode = KC_1;
-                    break;
-                case 2:
-                    keycode = KC_2;
-                    break;
-                case 3:
-                    keycode = KC_3;
-                    break;
-                case 4:
-                    keycode = KC_4;
-                    break;
-                case 5:
-                    keycode = KC_5;
-                    break;
-                case 8:
-                    keycode = KC_6;
-                    break;
-                case 9:
-                    keycode = KC_7;
-                    break;
-                case 10:
-                    keycode = KC_8;
-                    break;
-                case 11:
-                    keycode = KC_9;
-                    break;
-                case 12:
-                    keycode = KC_0;
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (col == 1) { // next row
-            switch (row) {
-                case 1:
-                    keycode = KC_GRV;
-                    break;
-                case 2:
-                    keycode = KC_MINS; // Left brace in Dvorak
-                    break;
-                case 3:
-                    keycode = KC_EQL; // Right brace in Dvorak
-                    break;
-                default:
-                    break;
-            }
-        }
-        if (keycode != KC_NO) {
-            action = (action_t)ACTION_MODS_KEY(MOD_LSFT, keycode);
-        }
-        if (action.code != (action_t)ACTION_NO.code) {
-            if (othermodspressed) {
-                action.key.mods = 0;
-            }
-            else if (shiftpressed) {
-                action.key.mods = 0;
-                del_mods(MOD_LSFT | MOD_RSFT);
-            }
-            simon_hotkey(record, action);
-            if (shiftpressed) {
-                set_mods(savedmods);
-            }
-        }
+        action_shiftswitch(event);
     }
     else if (id == FKEY_SWITCH) {
-        uint8_t row = event.key.row;
-        if (event.pressed) {
-            layer_on(LAYER_FKEYS);
-        }
-        else {
-            if (
-                    ((row == 0) && (layer_state & 1<<LAYER_NUMPAD)) // left button and from numpad; out-of-order release
-                 || ((row == 1) && (layer_state & 1<<LAYER_BLUESHIFT)) // right button and from BlueShift; out-of-order release
-               ) { 
-                layer_invert(LAYER_NUMPAD);
-                layer_invert(LAYER_BLUESHIFT);
-            }
-            layer_off(LAYER_FKEYS);
-        }
+        action_fkey(event);
     }
 }
 
