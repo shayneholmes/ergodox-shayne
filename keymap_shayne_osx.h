@@ -134,31 +134,10 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         NO,  N,   M   
     ),
 
-    KEYMAP(  // layer 5: reserved
-        // left hand
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,
-                                      TRNS,TRNS,
-                                           TRNS,
-                                 TRNS,TRNS,TRNS,
-        // right hand
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                  TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                       TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,
-        TRNS,
-        TRNS,TRNS,TRNS
-    ),
-
     // MODIFIERS THAT MIGHT BE STICKY
 
-    #define LAYER_NUMPAD 6
-    KEYMAP(  // layer 6: mouse + numpad
+    #define LAYER_NUMPAD 5
+    KEYMAP(  // layer 5: mouse + numpad
         // left hand
         FN0, NO,  NO,  NO,  NO,  PAUS,PSCR,
         TRNS,NO,  WH_U,MS_U,WH_D,BTN2,TRNS,
@@ -179,7 +158,8 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         ENT, TRNS,TRNS
     ),
 
-    KEYMAP(  // layer 7: F-keys + cursor
+    #define LAYER_MOVEMENT 6
+    KEYMAP(  // layer 6: F-keys + cursor
         // left hand
         FN0, F1,  F2,  F3,  F4,  F5,  F6,
         BTLD,NO,  PGUP,UP,  PGDN,NO,  TRNS,
@@ -199,8 +179,8 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS, TRNS,RSFT,RCTL
     ),
 
-    #define LAYER_BLUESHIFT 8
-    KEYMAP(  // layer 8: "BlueShift"
+    #define LAYER_BLUESHIFT 7
+    KEYMAP(  // layer 7: "BlueShift"
         // left hand
         FN0, F1,  F2,  F3,  F4,  F5,  F6,
         TRNS,FN12,FN12,FN12,PSCR,BSLS,TRNS,  // the FN12 entries are for tilde and inverted brace/bracket keys
@@ -221,73 +201,10 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,TRNS,TRNS
     ),
 
-    KEYMAP(  // layer 9: reserved
-        // left hand
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,
-                                      TRNS,TRNS,
-                                           TRNS,
-                                 TRNS,TRNS,TRNS,
-        // right hand
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                  TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                       TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,
-        TRNS,
-        TRNS,TRNS,TRNS
-    ),
-
-    KEYMAP(  // layer 10: reserved
-        // left hand
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,
-                                      TRNS,TRNS,
-                                           TRNS,
-                                 TRNS,TRNS,TRNS,
-        // right hand
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                  TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                       TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,
-        TRNS,
-        TRNS,TRNS,TRNS
-    ),
-
     // MODIFIERS THAT WON'T BE STICKY
 
-    KEYMAP(  // layer 11: Special function-driven commands (any-key)
-        // left hand
-        FN8, FN8, FN8, FN8, FN8, FN8, FN8, 
-        FN8, FN8, FN8, FN8, FN8, FN8, FN8, 
-        LSFT,FN8, FN8, FN8, FN8, FN8, 
-        FN8, FN8, FN8, FN8, FN8, FN8, FN8, 
-        FN8, FN8, FN8, FN8, FN8, 
-                                      FN8, FN8, 
-                                           FN8, 
-                                 FN8, FN10,FN8, 
-        // right hand
-             FN8, FN8, FN8, FN8, FN8, FN8, FN8, 
-             FN8, FN8, FN8, FN8, FN8, FN8, FN8, 
-                  FN8, FN8, FN8, FN8, FN8, RSFT,
-             FN8, FN8, FN8, FN8, FN8, FN8, FN8, 
-                       FN8, FN8, FN8, FN8, FN8, 
-        FN8, FN8, 
-        FN8, 
-        FN8, FN8, FN8
-    ),
-
-    #define LAYER_FKEYS 12
-    KEYMAP(  // layer 12: F-keys only
+    #define LAYER_FKEYS 8
+    KEYMAP(  // layer 8: F-keys only
         // left hand
         FN0, NO,  NO,  NO,  NO,  NO,  NO,  
         TRNS,F13, F14, F15, F16, NO,  TRNS,
@@ -307,52 +224,6 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         TRNS,
         TRNS,RSFT,RCTL
     ),
-
-    // TEMPLATES
-
-/*
-    KEYMAP(  // layer N: transparent on edges, all others are empty
-        // left hand
-        TRNS,NO,  NO,  NO,  NO,  NO,  NO,  
-        TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
-        TRNS,NO,  NO,  NO,  NO,  NO,  
-        TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
-        TRNS,TRNS,TRNS,LALT,LGUI,
-                                      TRNS,TRNS,
-                                           TRNS,
-                                 LCTL,LSFT,TRNS,
-        // right hand
-             NO,  NO,  NO,  NO,  NO,  NO,  TRNS,
-             TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
-                  NO,  NO,  NO,  NO,  NO,  TRNS,
-             TRNS,NO,  NO,  NO,  NO,  NO,  TRNS,
-                       RGUI,RALT,TRNS,TRNS,TRNS,
-        TRNS,TRNS,
-        TRNS,
-        TRNS,RSFT,RCTL
-    ),
-    KEYMAP(  // layer N: fully transparent
-        // left hand
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,TRNS,TRNS,TRNS,
-                                      TRNS,TRNS,
-                                           TRNS,
-                                 TRNS,TRNS,TRNS,
-        // right hand
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                  TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-             TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,TRNS,
-                       TRNS,TRNS,TRNS,TRNS,TRNS,
-        TRNS,TRNS,
-        TRNS,
-        TRNS,TRNS,TRNS
-    ),
-*/
-
 };
 
 /* id for user defined functions */
@@ -376,7 +247,7 @@ enum macro_id {
 static const action_t PROGMEM fn_actions[] = {
     ACTION_LAYER_SET(0, ON_PRESS),                  // FN0 - reset layer to just 0
     ACTION_LAYER_TAP_TOGGLE(LAYER_BLUESHIFT),       // FN1 - switch to BlueShift
-    ACTION_LAYER_TAP_KEY(7, KC_F21),                // FN2 - movement layer, also desktop switcher
+    ACTION_LAYER_TAP_KEY(LAYER_MOVEMENT, KC_F21),   // FN2 - movement layer, also desktop switcher
     ACTION_LAYER_TAP_TOGGLE(LAYER_NUMPAD),          // FN3 - numpad
     ACTION_FUNCTION(UNUSED),                        // ** FN4 - unused
     ACTION_FUNCTION(PLOVER_SWITCH),                 // FN5 - toggle Plover
