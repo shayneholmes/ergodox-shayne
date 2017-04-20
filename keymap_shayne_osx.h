@@ -582,20 +582,24 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 {
     keyevent_t event = record->event;
 
-    // print("action_function called\n");
-    // print("id  = "); phex(id); print("\n");
-    // print("opt = "); phex(opt); print("\n");
-    if (id == PLOVER_SWITCH) {
-        action_plover_key(event);
-    }
-    else if (id == ANY_KEY) {
-        action_any_key(event);
-    }
-    else if (id == SHIFT_SWITCH) {
-        action_shiftswitch(event);
-    }
-    else if (id == FKEY_SWITCH) {
-        action_fkey(event);
+    switch (id) {
+        case PLOVER_SWITCH:
+            action_plover_key(event);
+            break;
+        case ANY_KEY:
+            action_any_key(event);
+            break;
+        case SHIFT_SWITCH:
+            action_shiftswitch(event);
+            break;
+        case FKEY_SWITCH:
+            action_fkey(event);
+            break;
+        default:
+            print("Unknown action_function called\n");
+            print("id  = "); phex(id); print("\n");
+            print("opt = "); phex(opt); print("\n");
+            break;
     }
 }
 
