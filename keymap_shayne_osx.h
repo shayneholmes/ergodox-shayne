@@ -212,7 +212,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  TRNS,TRNS,TRNS,
         // right hand
              F7,  F8,  F9,  F10, F11, F12, TRNS,
-             TRNS,PGUP,HOME,UP,  END, LBRC,TRNS,
+             TRNS,PGUP,FN8, UP,  FN8, LBRC,TRNS, // Home and End mapped to Cmd-L/R
                   PGDN,LEFT,DOWN,RGHT,QUOT,TRNS,
              TRNS,TRNS,NO,  UP,  NO,  TRNS,TRNS,
                        LEFT,DOWN,RGHT,TRNS,TRNS,
@@ -455,17 +455,31 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
 
         action_t action = ACTION_NO;
 
-        if (col == 3 && row == 1) { // :
-            action = (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);
-        }
-        else if (col == 3 && row == 2) { // Q
-            action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
-        }
-        else if (col == 3 && row == 10) { // W
-            action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
-        }
-        else if (col == 4 && row == 12) { // Alt+tab
-            action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_TAB);
+        uint8_t active_layer = biton32(layer_state);
+
+        switch (active_layer) {
+            case LAYER_BLUESHIFT:
+                if (col == 1 && row == 9) { // Home
+                    action = (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_LEFT);
+                }
+                else if (col == 1 && row == 11) { // End
+                    action = (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_RGHT);
+                }
+                break;
+            default:
+                if (col == 3 && row == 1) { // :
+                    action = (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);
+                }
+                else if (col == 3 && row == 2) { // Q
+                    action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
+                }
+                else if (col == 3 && row == 10) { // W
+                    action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4);
+                }
+                else if (col == 4 && row == 12) { // Alt+tab
+                    action = (action_t)ACTION_MODS_KEY(MOD_LALT, KC_TAB);
+                }
+                break;
         }
         if (action.code != (action_t)ACTION_NO.code) {
             simon_hotkey(record, action);
