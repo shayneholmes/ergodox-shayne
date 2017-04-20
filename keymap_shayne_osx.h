@@ -354,63 +354,44 @@ void action_any_key(keyevent_t event) {
 }
 
 uint8_t get_shiftswitch_key(keyevent_t event) {
-    uint8_t keycode = KC_NO;
-
     uint8_t col = event.key.col;
     uint8_t row = event.key.row;
 
     if (col == 0) { // Number row
         switch (row) {
             case 1:
-                keycode = KC_1;
-                break;
+                return KC_1;
             case 2:
-                keycode = KC_2;
-                break;
+                return KC_2;
             case 3:
-                keycode = KC_3;
-                break;
+                return KC_3;
             case 4:
-                keycode = KC_4;
-                break;
+                return KC_4;
             case 5:
-                keycode = KC_5;
-                break;
+                return KC_5;
             case 8:
-                keycode = KC_6;
-                break;
+                return KC_6;
             case 9:
-                keycode = KC_7;
-                break;
+                return KC_7;
             case 10:
-                keycode = KC_8;
-                break;
+                return KC_8;
             case 11:
-                keycode = KC_9;
-                break;
+                return KC_9;
             case 12:
-                keycode = KC_0;
-                break;
-            default:
-                break;
+                return KC_0;
         }
     }
-    if (col == 1) { // next row
+    else if (col == 1) { // next row
         switch (row) {
             case 1:
-                keycode = KC_GRV;
-                break;
+                return KC_GRV;
             case 2:
-                keycode = KC_MINS; // Left brace in Dvorak
-                break;
+                return KC_MINS; // Left brace in Dvorak
             case 3:
-                keycode = KC_EQL; // Right brace in Dvorak
-                break;
-            default:
-                break;
+                return KC_EQL; // Right brace in Dvorak
         }
     }
-    return keycode;
+    return KC_NO;
 }
 
 void action_shiftswitch(keyevent_t event) {
