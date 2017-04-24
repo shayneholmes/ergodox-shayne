@@ -326,8 +326,6 @@ action_t get_any_key_action(keyevent_t event) {
                     case 9:  return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_LEFT); // Home
                     case 11: return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_RGHT); // End
                 }
-            } else if (col == 3 && row == 2) {
-              return (action_t)ACTION_MODS_KEY(MOD_LALT, KC_F4); // Q
             }
             break;
         case LAYER_NUMPAD:
@@ -337,7 +335,7 @@ action_t get_any_key_action(keyevent_t event) {
             break;
         case LAYER_BASE:
             if (col == 4 && row == 12) {
-              return (action_t)ACTION_MODS_KEY(MOD_LALT, KC_TAB); // Alt+tab
+              return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_TAB); // Alt+tab
             } else if (col == 1 && row == 1) { // apostrophe / CMD+`
                 bool gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
                 return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : KC_Q);
