@@ -312,6 +312,11 @@ void action_plover_key(keyevent_t event) {
     }
 }
 
+action_t cmd_backtick_action(keyevent_t event, uint8_t default_key) {
+    bool gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
+    return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : default_key);
+}
+
 action_t get_any_key_action(keyevent_t event) {
     uint8_t col = event.key.col;
     uint8_t row = event.key.row;
@@ -336,11 +341,9 @@ action_t get_any_key_action(keyevent_t event) {
             if (col == 4 && row == 12) {
                 return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_TAB); // Alt+tab
             } else if (col == 1 && row == 1) { // apostrophe / CMD+`
-                bool gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
-                return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : KC_Q);
+                return cmd_backtick_action(event, KC_Q);
             } else if (col == 0 && row == 0) { // ESC / CMD+`
-                bool gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
-                return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : KC_ESC);
+                return cmd_backtick_action(event, KC_ESC);
             }
             break;
         default:
