@@ -29,7 +29,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     #define LAYER_BASE 0
     KEYMAP(  // layer 0: customized qwerty with symbol row switched
         // left hand
-        ESC, FN12,FN12,FN12,FN12,FN12,F17,
+        FN8, FN12,FN12,FN12,FN12,FN12,F17,
         TAB, FN8, W,   E,   R,   T,   FN2,
         LSFT,A,   S,   D,   F,   G,
         LCTL,Z,   X,   C,   V,   B,   DEL,
@@ -339,6 +339,9 @@ action_t get_any_key_action(keyevent_t event) {
             } else if (col == 1 && row == 1) { // apostrophe / CMD+`
                 bool gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
                 return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : KC_Q);
+            } else if (col == 0 && row == 0) { // ESC / CMD+`
+                bool gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
+                return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : KC_ESC);
             }
             break;
         default:
