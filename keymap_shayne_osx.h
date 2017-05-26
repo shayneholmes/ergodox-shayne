@@ -313,7 +313,11 @@ void action_plover_key(keyevent_t event) {
 }
 
 action_t cmd_backtick_action(keyevent_t event, uint8_t default_key) {
-    bool gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
+    static bool gui_pressed;
+    if (event.pressed) {
+        // save GUI state that will persist until the unpress
+        gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
+    }
     return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : default_key);
 }
 
