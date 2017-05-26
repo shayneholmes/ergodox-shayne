@@ -269,8 +269,7 @@ void simon_hotkey(keyevent_t event, action_t action)
         case ACT_LMODS:
         case ACT_RMODS:
             {
-                uint8_t mods = (action.kind.id == ACT_LMODS) ?  action.key.mods :
-                                                                action.key.mods<<4;
+                uint8_t mods = (action.kind.id == ACT_LMODS) ?  action.key.mods : action.key.mods<<4;
                 if (event.pressed) {
                     if (mods) {
                         add_weak_mods(mods);
@@ -330,12 +329,12 @@ action_t get_any_key_action(keyevent_t event) {
             break;
         case LAYER_NUMPAD:
             if (col == 3 && row == 1) {
-              return (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);  // :
+                return (action_t)ACTION_MODS_KEY(MOD_LSFT, KC_Z);  // :
             }
             break;
         case LAYER_BASE:
             if (col == 4 && row == 12) {
-              return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_TAB); // Alt+tab
+                return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_TAB); // Alt+tab
             } else if (col == 1 && row == 1) { // apostrophe / CMD+`
                 bool gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
                 return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : KC_Q);
