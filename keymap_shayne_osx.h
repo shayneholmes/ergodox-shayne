@@ -29,8 +29,8 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     #define LAYER_BASE 0
     KEYMAP(  // layer 0: customized qwerty with symbol row switched
         // left hand
-        FN8, FN12,FN12,FN12,FN12,FN12,F17,
-        TAB, FN8, W,   E,   R,   T,   FN2,
+        FN6, FN12,FN12,FN12,FN12,FN12,F17,
+        TAB, FN6, W,   E,   R,   T,   FN2,
         LSFT,A,   S,   D,   F,   G,
         LCTL,Z,   X,   C,   V,   B,   DEL,
         FN3, FN1, LCTL,LALT,LGUI,
@@ -39,10 +39,10 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                                  BSPC,LSFT,LGUI,
         // right hand
              F18, FN12,FN12,FN12,FN12,FN12,MPLY,
-             FN3, Y,   U,   I,   O,   P,   MNXT,
+             FN3, Y,   U,   I,   O,   P,   FN6,
                   H,   J,   K,   L,   SCLN,RSFT,
              DEL, N,   M,   COMM,DOT, SLSH,RCTL,
-                       RGUI,RALT,RCTL,FN8, FN2,
+                       RGUI,RALT,RCTL,FN6, FN2,
         F13, MPLY,
         F14,
         ENT, FN1, SPC
@@ -143,7 +143,7 @@ static const uint8_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         FN0, NO,  NO,  NO,  NO,  PAUS,PSCR,
         TRNS,NO,  WH_U,MS_U,WH_D,BTN2,TRNS,
         TRNS,NO,  MS_L,MS_D,MS_R,BTN1,
-        TRNS,FN8, NO,  NO,  NO,  BTN3,TRNS,
+        TRNS,FN7, NO,  NO,  NO,  BTN3,TRNS,
         TRNS,FN13,TRNS,TRNS,TRNS,
                                       TRNS,TRNS,
                                            TRNS,
@@ -252,9 +252,9 @@ static const action_t PROGMEM fn_actions[] = {
     ACTION_LAYER_TAP_TOGGLE(LAYER_NUMPAD),          // FN3 - numpad
     ACTION_FUNCTION(UNUSED),                        // ** FN4 - unused
     ACTION_FUNCTION(PLOVER_SWITCH),                 // FN5 - toggle Plover
-    ACTION_FUNCTION(UNUSED),                        // ** FN6 - unused
-    ACTION_FUNCTION(UNUSED),                        // ** FN7 - unused
-    ACTION_FUNCTION(ANY_KEY),                       // FN8 - AnyKey functional layer
+    ACTION_FUNCTION_OPT(ANY_KEY, LAYER_BASE),       // FN6 - AnyKey on Base
+    ACTION_FUNCTION_OPT(ANY_KEY, LAYER_NUMPAD),     // FN7 - AnyKey on Numpad
+    ACTION_FUNCTION_OPT(ANY_KEY, LAYER_BLUESHIFT),  // FN8 - AnyKey on Blueshift
     ACTION_FUNCTION(UNUSED),                        // ** FN9 - unused
     ACTION_MACRO(PASSWORD1),                        // FN10 - password1
     ACTION_MACRO(PASSWORD2),                        // FN11 - password2
@@ -295,7 +295,7 @@ void action_plover_key(keyevent_t event) {
     if (event.pressed) return;
 
     uint8_t savedmods = get_mods();
-    uint8_t shift_pressed = (savedmods & (MOD_LSFT | MOD_RSFT));
+    uint8_t shift_pressed = (savedmods & (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT)));
     if (shift_pressed) {
         layer_off(LAYER_PLOVER); // shift+plover is a signal to AHK to restart Plover, so don't toggle the plover layer
         return;
@@ -316,18 +316,16 @@ action_t cmd_backtick_action(keyevent_t event, uint8_t default_key) {
     static bool gui_pressed;
     if (event.pressed) {
         // save GUI state that will persist until the unpress
-        gui_pressed = (get_mods() & (MOD_LGUI | MOD_RGUI));
+        gui_pressed = (get_mods() & (MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI)));
     }
     return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : default_key);
 }
 
-action_t get_any_key_action(keyevent_t event) {
+action_t get_any_key_action(keyevent_t event, uint8_t layer) {
     uint8_t col = event.key.col;
     uint8_t row = event.key.row;
 
-    uint8_t active_layer = biton32(layer_state);
-
-    switch (active_layer) {
+    switch (layer) {
         case LAYER_BLUESHIFT:
             if (col == 1) {
                 switch (row) {
@@ -346,6 +344,8 @@ action_t get_any_key_action(keyevent_t event) {
                 return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_TAB); // Alt+tab
             } else if (col == 1 && row == 1) { // apostrophe / CMD+`
                 return cmd_backtick_action(event, KC_Q);
+            } else if (col == 1 && row == 13) { // media forward/back
+                return (action_t)ACTION_MODS_KEY(0, (get_mods() & (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT))) ? KC_MEDIA_PREV_TRACK : KC_MEDIA_NEXT_TRACK);
             } else if (col == 0 && row == 0) { // ESC / CMD+`
                 return cmd_backtick_action(event, KC_ESC);
             }
@@ -361,8 +361,8 @@ action_t get_any_key_action(keyevent_t event) {
     return (action_t)ACTION_NO;
 }
 
-void action_any_key(keyevent_t event) {
-    action_t action = get_any_key_action(event);
+void action_any_key(keyevent_t event, uint8_t layer) {
+    action_t action = get_any_key_action(event, layer);
     if (action.code != (action_t)ACTION_NO.code) {
         simon_hotkey(event, action);
     }
@@ -404,7 +404,7 @@ void action_shiftswitch(keyevent_t event) {
 
     action_t action = (action_t)ACTION_MODS_KEY(savedmods ? 0 : MOD_LSFT, keycode);
 
-    del_mods(MOD_LSFT | MOD_RSFT);
+    del_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT));
     simon_hotkey(event, action);
     set_mods(savedmods);
 }
@@ -434,7 +434,7 @@ void action_function(keyrecord_t *record, uint8_t id, uint8_t opt)
         case PLOVER_SWITCH:
             return action_plover_key(event);
         case ANY_KEY:
-            return action_any_key(event);
+            return action_any_key(event, opt);
         case SHIFT_SWITCH:
             return action_shiftswitch(event);
         case FKEY_SWITCH:
