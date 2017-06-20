@@ -312,13 +312,13 @@ void action_plover_key(keyevent_t event) {
     }
 }
 
-action_t cmd_backtick_action(keyevent_t event, uint8_t default_key) {
-    static bool gui_pressed;
+action_t key_depending_on_mods(keyevent_t event, uint8_t default_key, uint8_t modified_key, uint8_t dependent_mods) {
+    static bool mod_pressed;
     if (event.pressed) {
-        // save GUI state that will persist until the unpress
-        gui_pressed = (get_mods() & (MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI)));
+        // save mod state that will persist until the unpress
+        mod_pressed = (get_mods() & dependent_mods);
     }
-    return (action_t) ACTION_MODS_KEY(0, gui_pressed ? KC_GRV : default_key);
+    return (action_t) ACTION_MODS_KEY(MOD_NONE, mod_pressed ? modified_key : default_key);
 }
 
 action_t get_any_key_action(keyevent_t event, uint8_t layer) {
@@ -343,11 +343,11 @@ action_t get_any_key_action(keyevent_t event, uint8_t layer) {
             if (col == 4 && row == 12) {
                 return (action_t)ACTION_MODS_KEY(MOD_LGUI, KC_TAB); // Alt+tab
             } else if (col == 1 && row == 1) { // apostrophe / CMD+`
-                return cmd_backtick_action(event, KC_Q);
+                return key_depending_on_mods(event, KC_Q, KC_GRV, MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI));
             } else if (col == 1 && row == 13) { // media forward/back
-                return (action_t)ACTION_MODS_KEY(0, (get_mods() & (MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT))) ? KC_MEDIA_PREV_TRACK : KC_MEDIA_NEXT_TRACK);
+                return key_depending_on_mods(event, KC_MEDIA_NEXT_TRACK, KC_MEDIA_PREV_TRACK, MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT));
             } else if (col == 0 && row == 0) { // ESC / CMD+`
-                return cmd_backtick_action(event, KC_ESC);
+                return key_depending_on_mods(event, KC_ESC, KC_GRV, MOD_BIT(KC_LGUI) | MOD_BIT(KC_RGUI));
             }
             break;
         default:
@@ -402,7 +402,7 @@ void action_shiftswitch(keyevent_t event) {
 
     uint8_t savedmods = get_mods();
 
-    action_t action = (action_t)ACTION_MODS_KEY(savedmods ? 0 : MOD_LSFT, keycode);
+    action_t action = (action_t)ACTION_MODS_KEY(savedmods ? MOD_NONE : MOD_LSFT, keycode);
 
     del_mods(MOD_BIT(KC_LSFT) | MOD_BIT(KC_RSFT));
     simon_hotkey(event, action);
